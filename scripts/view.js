@@ -5,6 +5,7 @@ export class View {
     actionModal: this.#qs(".action-modal"),
     resetBtn: this.#qs("#reset-btn"),
     newRoundBtn: this.#qs("#new-round-btn"),
+    grid: this.#qs(".grid-container"),
     gridSquares: this.#qsAll(".grid-square"),
     turnIndicator: this.#qs(".turn"),
     modal: this.#qs(".result-modal"),
@@ -18,21 +19,27 @@ export class View {
   constructor(store, players) {
     this.store = store;
     this.players = players;
-    this.$.menuBtn.addEventListener("click", (event) => {
-      this.#toggleMenu(event);
+
+    // UI-only event listeners
+    this.$.menuBtn.addEventListener("click", () => {
+      this.#toggleMenu();
     });
   }
 
   render(game) {
     const { player, winner, tie, moves, history } = game;
 
-    this.#toggleMenu();
+    this.#closeAll();
+    this.#clearMoves();
     this.#initializeMoves(moves);
     this.#updateTurnIndicator(player);
     this.#renderResultModal(winner, tie);
     this.#renderScore(history);
   }
 
+  /**
+   * Register all the event listeners
+   */
   bindGameResetEvent(handler) {
     this.$.resetBtn.addEventListener("click", handler);
     this.$.modalButton.addEventListener("click", handler);
@@ -43,38 +50,39 @@ export class View {
   }
 
   bindPlayerMoveEvent(handler) {
-    this.$.gridSquares.forEach((square) => {
-      square.addEventListener("click", () => handler(square));
-    });
+    // this.$.gridSquares.forEach((square) => {
+    //   square.addEventListener("click", () => handler(square));
+    // });
+    this.#delegate(this.$.grid, ".grid-square", "click", handler)
   }
 
-  #toggleMenu(event = null) {
-    if (event) {
-      this.$.actionModal.classList.toggle("hidden");
-      this.$.menuBtn.classList.toggle("border-expanded");
-      this.$.actionModal.classList.toggle("border-expanded");
-      this.$.menuIcon.classList.toggle("reverse-direction");
-    } else {
-      this.$.actionModal.classList.add("hidden");
-      this.$.menuBtn.classList.remove("border-expanded");
-      this.$.actionModal.classList.remove("border-expanded");
-      this.$.menuIcon.classList.remove("reverse-direction");
-    }
+  /**
+   * DOM helper methods
+   */
+  #closeAll() {
+    this.$.actionModal.classList.add("hidden");
+    this.$.menuBtn.classList.remove("border-expanded");
+    this.$.actionModal.classList.remove("border-expanded");
+    this.$.menuIcon.classList.remove("reverse-direction");    
+  }
+
+  #clearMoves() {
+    this.$.gridSquares.forEach((square) => {
+      square.replaceChildren();
+    });    
+  }
+
+  #toggleMenu() {
+    this.$.actionModal.classList.toggle("hidden");
+    this.$.menuBtn.classList.toggle("border-expanded");
+    this.$.actionModal.classList.toggle("border-expanded");
+    this.$.menuIcon.classList.toggle("reverse-direction");
   }
 
   #initializeMoves(moves) {
-    this.$.gridSquares.forEach((square) => {
-      this.#clearSquare(square);
-    });
     moves.forEach((move) => {
       this.#handlePlayerMove(move);
     });
-  }
-
-  #clearSquare(square) {
-    if (square.hasChildNodes()) {
-      square.removeChild(square.firstChild);
-    }
   }
 
   #handlePlayerMove(move) {
@@ -102,14 +110,14 @@ export class View {
 
     const turnP = document.createElement("p");
     turnP.setAttribute("class", currentPlayer.colorClass);
-    turnP.textContent = `Player ${currentPlayer.id}, you are up!`;
+    turnP.innerText = `Player ${currentPlayer.id}, you are up!`;
     this.$.turnIndicator.replaceChildren(turnI, turnP);
   }
 
   #renderResultModal(winner, tie) {
     // show when there is a winner or tie
     if (winner || tie) {
-      this.$.modalResult.textContent = winner
+      this.$.modalResult.innerText = winner
         ? `Player ${winner} wins!`
         : tie
         ? "Tie!"
@@ -123,11 +131,11 @@ export class View {
   }
 
   #renderScore(gamesHistory) {
-    this.$.player1Wins.textContent =
+    this.$.player1Wins.innerText =
       gamesHistory.filter((game) => game.winner === 1).length + " wins";
-    this.$.player2Wins.textContent =
+    this.$.player2Wins.innerText =
       gamesHistory.filter((game) => game.winner === 2).length + " wins";
-    this.$.ties.textContent =
+    this.$.ties.innerText =
       gamesHistory.filter((game) => game.tie).length + " ties";
   }
 
@@ -138,4 +146,21 @@ export class View {
   #qsAll(selector) {
     return document.querySelectorAll(selector);
   }
+
+  /**
+   * Rather than registering event listeners on every child element in our Tic Tac Toe grid, we can
+   * listen to the grid container and derive which square was clicked using the matches() function.
+   *
+   * @param {*} el the "container" element you want to listen for events on
+   * @param {*} selector the "child" elements within the "container" you want to handle events for
+   * @param {*} eventKey the event type you are listening for (e.g. "click" event)
+   * @param {*} handler the callback function that is executed when the specified event is triggered on the specified children
+   */
+  #delegate(el, selector, eventKey, handler) {
+    el.addEventListener(eventKey, (event) => {
+      if (event.target.matches(selector)) {
+        handler(event.target);
+      }
+    });
+  }  
 }
