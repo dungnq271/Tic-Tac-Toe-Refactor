@@ -21,23 +21,26 @@
   </head>
   <body>
     <div class="grid-container">
+      <!-- Turn indicator -->
       <div class="turn">
         <i class="fa-solid fa-x"></i>
         <p>Player 1, you are up!</p>
       </div>
 
+      <!-- Dropdown menu -->
       <div class="action-menu">
         <button class="menu-btn">
-          <p>Actions</p>
+          Actions
           <i class="fa-solid fa-angle-down"></i>
         </button>
 
         <div class="action-modal hidden">
-          <button class="menu-item" id="reset-btn">Reset</button>
-          <button class="menu-item" id="new-round-btn">New Round</button>
+          <button id="reset-btn">Reset</button>
+          <button id="new-round-btn">New Round</button>
         </div>
       </div>
 
+      <!-- Game board -->
       <div class="grid-square" id="1"></div>
       <div class="grid-square" id="2"></div>
       <div class="grid-square" id="3"></div>
@@ -48,6 +51,7 @@
       <div class="grid-square" id="8"></div>
       <div class="grid-square" id="9"></div>
 
+      <!-- Scoreboard -->
       <div class="stat-bar" id="player-1">
         <p class="header">Player 1</p>
         <p class="stat">0 wins</p>
@@ -62,6 +66,7 @@
       </div>
     </div>
 
+    <!-- Modal that opens when game ends -->
     <div class="result-modal hidden">
       <div class="modal-body">
         <p>Player 1 wins!</p>

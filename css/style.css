@@ -1,15 +1,7 @@
-/*
-========================
-SHARED-CSS
-========================
-*/
-
 :root {
   --blue-color: #04bfbf;
   --green-color: #a0a603;
   --white-color: #f2e0c9;
-  /* --background-color: #04ADBF; */
-  /* --background-color: #038695; */
   --background-color: #025959;
   --square-color: #038787;
   --menu-color: #038695;
@@ -37,6 +29,11 @@ body {
   align-items: center;
 }
 
+/*
+========================
+SHARED-CSS
+========================
+*/
 .grid-square {
   background-color: var(--square-color);
   z-index: 1;
@@ -232,7 +229,7 @@ ACTION MODAL
   font-size: 0.9rem;
 }
 
-.menu-item:hover {
+.action-modal button:hover {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -300,10 +297,7 @@ RESULT MODAL
   background-color: var(--modal-color);
   border-radius: 20px;
   position: fixed;
-}
-
-.result-modal p {
-  margin: 10px;
+  gap: 20px;
 }
 
 .result-modal button {
@@ -311,7 +305,6 @@ RESULT MODAL
   color: rgba(0, 0, 0, 1);
   font-weight: 100px;
   padding: 10px;
-  margin: 10px;
   border: none;
   border-radius: 3px;
   font-size: 1rem;
