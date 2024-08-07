@@ -87,11 +87,12 @@ export class Store extends EventTarget {
   }
 
   newRound() {
+    this.resetGame();
+
     const currentState = structuredClone(this.#getState());
     currentState.history.allGames.push(
       ...currentState.history.currentRoundGames
     );
-    currentState.currentGameMoves = [];
     currentState.history.currentRoundGames = [];
     this.#saveState(currentState);
   }
