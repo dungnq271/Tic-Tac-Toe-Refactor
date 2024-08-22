@@ -1,144 +1,46 @@
-# Tic Tac Toe Refactor with Vanilla Javascript
+# Live Tic Tac Toe React App
 
-This is my refactor of Tic Tac Toe web app using vanilla Javascript ES6 with MVC pattern.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Table of contents
+## Available Scripts
 
-- [Overview](#overview)
-  - [Screenshot](#screenshot)
-  - [Links](#links)
-- [My process](#my-process)
-  - [Built with](#built-with)
-  - [What I learned](#what-i-learned)
-  - [Continued development](#continued-development)
-  - [Useful resources](#useful-resources)
-- [Author](#author)
-- [Acknowledgments](#acknowledgments)
+In the project directory, you can run:
 
-## Overview
+### `npm start`
 
-### Screenshot
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-![](./screenshot/app.png)
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
 
-### Links
+### `npm test`
 
-- Live Site URL: [Live URL](https://dungnq271.github.io/Tic-Tac-Toe-Refactor/)
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-## My process
+### `npm run build`
 
-### Built with
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-- Semantic HTML5 markup
-- CSS custom properties
-- Flexbox
-- CSS Grid
-- Mobile-first workflow
-- Vanilla Javascript ES6
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-### What I learned
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
--  I discovered a [CSS box-shadow template site](https://getcssscan.com/css-box-shadow-examples) to select the box shadow effect for the squares.
-- It took me some time to implement the Action Dropdown Menu. Here is the HTML layout:
-```html
-<div class="action-menu">
-  <button class="menu-btn">
-	<p>Actions</p>
-	<i class="fa-solid fa-angle-down"></i>
-  </button>
+### `npm run eject`
 
-  <div class="action-modal hidden">
-	<button class="menu-item" id="reset-btn">Reset</button>
-	<button class="menu-item" id="new-round-btn">New Round</button>
-  </div>
-</div>
-```
-I struggled with positioning the action-modal div above one of the move squares at first. It turned out to be quite easy with these code (some properties are removed to show the important ones):
-```css
-.grid-square {
-  z-index: 1;
-}
+**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-.action-menu {
-  position: relative;
-}
+If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-.action-modal {
-  position: absolute;
-  z-index: 2;
-}
-```
-- And the result display modal was worth some efforts:
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-HTML Layout:
-```html
-<div class="result-modal hidden">
-  <div class="modal-body">
-	<p>Player 1 wins!</p>
-	<button>Play again</button>
-  </div>
-</div>
-```
+You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-CSS Styles (only show the important ones): 
-```css
-.result-modal {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
- }
-```
-The `position: fixed` (or `position: absolute`) property is important as it removed the element from the normal document flow. The element will display like this otherwise:
-![](./screenshot/result-modal-misalign.png)
-- I learned to implement the project using MVC pattern myself. Here some the code snippets that made everything fall into place:
+## Learn More
 
-In [store.js](./scripts/store.js): I first used [dispatchEvent](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) api (caveat: the class implementing this have to inherit from [EventTarget](https://developer.mozilla.org/en-US/docs/Web/API/EventTarget) interface) and realized how useful it is. As stated in the documentation: "All applicable event handlers are called and return before dispatchEvent() returns."
-```js
-#saveState(newState) {
-  localStorage.setItem(this.storageKey, JSON.stringify(newState));
-  this.dispatchEvent(new Event("statechange"));
-}
-```
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-And in the *Controller* [app.js](./scripts/app.js) I had to register an event listener when calling this function. 
-```js
-store.addEventListener("statechange", () => {
-  view.render(store.game);
-});
-```
-Basically, every time the user interacts with the app, the *Store* will update its state then the *View* will render the latest state.
-Also, the [localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) is super important. It helps to save game state for switching between page sessions. We can open another tab or refresh the page without losing the game state.
-
-The code to get the latest state from storage:
-```js
-#getState() {
-  const item = localStorage.getItem(this.storageKey);
-  return item ? JSON.parse(item) : initialState;
-}
-```
-
-### Continued development
-
-- [ ] Refactor using Typescript
-- [ ] Refactor using React
-
-### Useful resources
-
-- **Color theme**: [Travel](https://color.adobe.com/trends/Travel)
-
-- **Font**: Google Fonts & [Font Awesome](https://fontawesome.com/)
-
-- [Original Implementation](https://github.com/zachgoll/tic-tac-toe-subscriber-refactor) - I refered to the MVC pattern and how local storage API is used in this repo as I am learning these.
-
-## Author
-
-- Twitter - [@LeonardNg27](https://x.com/LeonardNg27)
-
-## Acknowledgments
-
-Inspired from [@zg_dev](https://x.com/zg_dev)'s [Frontend Web Development: In-Depth Project Tutorial (HTML, CSS, JavaScript, TypeScript, React)](https://youtu.be/MsnQ5uepIaE) video
+To learn React, check out the [React documentation](https://reactjs.org/).
